@@ -7,8 +7,10 @@ namespace pu::ui::render
 {
     std::unordered_map<u32, std::pair<std::string, NativeFont>> filefonts;
     std::unordered_map<u32, std::pair<SharedFont, NativeFont>> shfonts;
+    std::unordered_map<u32, std::pair<SharedFont, NativeFont>> icofonts;
 
     static SharedFont shfont = SharedFont::Standard;
+    static SharedFont icofont = SharedFont::NintendoExtended;
     static std::string fontpth;
 
     NativeTexture ConvertToTexture(NativeSurface Surface)
@@ -25,9 +27,26 @@ namespace pu::ui::render
         return ConvertToTexture(txsrf);
     }
 
+    NativeTexture RenderIcon(NativeFont Font, u16 iconCode, Color Color)
+    {
+        NativeSurface icsrf = TTF_RenderGlyph_Blended(Font, iconCode, { Color.R, Color.G, Color.B, Color.A });
+        SDL_SetSurfaceAlphaMod(icsrf, 255);
+        return ConvertToTexture(icsrf);
+    }
+
     NativeTexture LoadImage(std::string Path)
     {
         return ConvertToTexture(IMG_Load(Path.c_str()));
+    }
+    
+    NativeTexture GetColorTexture(Color color)
+    {
+        NativeTexture txclr = SDL_CreateTexture(GetMainRenderer(), SDL_PIXELFORMAT_RGBA8888,SDL_TEXTUREACCESS_TARGET,272,272);
+        SDL_SetRenderTarget(GetMainRenderer(), txclr);
+        SDL_SetRenderDrawColor(GetMainRenderer(), color.R, color.G, color.B, color.A);
+        SDL_RenderClear(GetMainRenderer());
+        SDL_SetRenderTarget(GetMainRenderer(), NULL);
+        return txclr;
     }
 
     NativeFont LoadSharedFont(SharedFont Type, s32 Size)
@@ -44,6 +63,23 @@ namespace pu::ui::render
             font = TTF_OpenFontRW(mem, 1, Size);
         }
         if(font != NULL) shfonts.insert(std::make_pair(Size, std::make_pair(Type, font)));
+        return font;
+    }
+
+    NativeFont LoadSharedIconFont(SharedFont Type, s32 Size)
+    {
+        auto it = icofonts.find(Size);
+        if((it != icofonts.end()) && (it->second.first == Type)) return it->second.second;
+        PlFontData plfont;
+        NativeFont font = NULL;
+        SDL_RWops *mem = NULL;
+        Result rc = plGetSharedFontByType(&plfont, static_cast<s32>(Type));
+        if(rc == 0)
+        {
+            mem = SDL_RWFromMem(plfont.address, plfont.size);
+            font = TTF_OpenFontRW(mem, 1, Size);
+        }
+        if(font != NULL) icofonts.insert(std::make_pair(Size, std::make_pair(Type, font)));
         return font;
     }
 

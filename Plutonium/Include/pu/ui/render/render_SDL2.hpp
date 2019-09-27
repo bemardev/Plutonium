@@ -42,8 +42,11 @@ namespace pu::ui::render
 
     NativeTexture ConvertToTexture(NativeSurface Surface);
     NativeTexture RenderText(NativeFont Font, String Text, Color Color);
+    NativeTexture RenderIcon(NativeFont Font, u16 iconCode, Color color);
     NativeTexture LoadImage(std::string Path);
+    NativeTexture GetColorTexture(Color color);
     NativeFont LoadSharedFont(SharedFont Type, s32 Size);
+    NativeFont LoadSharedIconFont(SharedFont Type, s32 Size);
     NativeFont LoadFont(std::string Path, s32 Size);
     void SetDefaultFont(std::string Path);
     void SetDefaultFontFromShared(SharedFont Type);
