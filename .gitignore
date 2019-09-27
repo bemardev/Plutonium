@@ -3,7 +3,11 @@ Build/
 build/
 Output/
 Test/
+<<<<<<< HEAD
 nbproject/
+=======
+Testris/
+>>>>>>> origin/master
 *.elf
 *.nso
 *.nro
