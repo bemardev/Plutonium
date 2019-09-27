@@ -9,10 +9,14 @@ namespace pu::ui
         this->tfont = render::LoadDefaultFont(30);
         this->cfont = render::LoadDefaultFont(20);
         this->ofont = render::LoadDefaultFont(18);
+        this->titleclr = { 10, 10, 10, 255 };
+        this->cntclr = { 20, 20, 20, 255 };
+        this->clr = { 225, 225, 225, 0 };
+        this->btnclr = {180, 180, 200, 0 };
         this->stitle = Title;
         this->scnt = Content;
-        this->title = render::RenderText(this->tfont, Title, { 10, 10, 10, 255 });
-        this->cnt = render::RenderText(this->cfont, Content, { 20, 20, 20, 255 });
+        this->title = render::RenderText(this->tfont, Title, this->titleclr);
+        this->cnt = render::RenderText(this->cfont, Content, this->cntclr);
         this->osel = 0;
         this->prevosel = 0;
         this->selfact = 255;
@@ -43,9 +47,33 @@ namespace pu::ui
         for(auto &opt: this->opts) render::DeleteTexture(opt);
     }
 
+    void Dialog::SetTitleColor(Color Color)
+    {
+        render::DeleteTexture(this->title);
+        this->titleclr = Color;
+        this->title = render::RenderText(this->tfont, this->stitle, this->titleclr);
+    }
+    
+    void Dialog::SetContentColor(Color Color)
+    {
+        render::DeleteTexture(this->cnt);
+        this->cntclr = Color;
+        this->cnt = render::RenderText(this->cfont, this->scnt, this->cntclr);
+    }
+    
+    void Dialog::SetColor(Color Color)
+    {
+        this->clr = Color;
+    }
+    
+    void Dialog::SetButtonColor(Color Color)
+    {
+        this->btnclr = Color;
+    }
+    
     void Dialog::AddOption(String Name)
     {
-        this->opts.push_back(render::RenderText(this->ofont, Name, { 10, 10, 10, 255 }));
+        this->opts.push_back(render::RenderText(this->ofont, Name, this->cntclr));
         this->sopts.push_back(Name);
     }
 
@@ -114,9 +142,9 @@ namespace pu::ui
         s32 elemw = ((dw - (20 * (this->opts.size() + 1))) / this->opts.size());
         s32 elx = dx + ((dw - ((elemw * this->opts.size()) + (20 * (this->opts.size() - 1)))) / 2);
         s32 r = 35;
-        s32 nr = 180;
-        s32 ng = 180;
-        s32 nb = 200;
+        s32 nr = this->btnclr.R;
+        s32 ng = this->btnclr.G;
+        s32 nb = this->btnclr.B;
         bool end = false;
         s32 initfact = 0;
         while(true)
@@ -182,7 +210,7 @@ namespace pu::ui
                 s32 bh = dh;
                 s32 fw = bw - (r * 2);
                 s32 fh = bh - (r * 2);
-                Color clr = { 225, 225, 225, initfact };
+                clr.A = initfact;
                 s32 aclr = initfact;
                 if(aclr < 0) aclr = 0;
                 if(aclr > 125) aclr = 125;

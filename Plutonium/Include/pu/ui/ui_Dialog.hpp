@@ -25,6 +25,10 @@ namespace pu::ui
             PU_SMART_CTOR(Dialog)
             ~Dialog();
 
+            void SetTitleColor(Color Color);
+            void SetContentColor(Color Color);
+            void SetColor(Color Color);
+            void SetButtonColor(Color Color);
             void AddOption(String Name);
             void SetCancelOption(String Name = "Cancel");
             void RemoveCancelOption();
@@ -35,6 +39,10 @@ namespace pu::ui
             bool UserCancelled();
             bool IsOk();
         private:
+            Color titleclr;
+            Color cntclr;
+            Color clr;
+            Color btnclr;
             bool hcancel;
             String scancel;
             render::NativeFont tfont;
