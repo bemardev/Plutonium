@@ -33,6 +33,7 @@
 #include <pu/ui/elm/elm_Rectangle.hpp>
 #include <pu/ui/elm/elm_TextBlock.hpp>
 #include <pu/ui/elm/elm_Toggle.hpp>
+#include <pu/ui/elm/elm_ClickableImage.hpp>
 
 #include <pu/ui/extras/extras_Toast.hpp>
 
