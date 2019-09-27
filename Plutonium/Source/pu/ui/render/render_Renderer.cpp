@@ -7,6 +7,7 @@ namespace pu::ui::render
 
     extern std::unordered_map<u32, std::pair<std::string, NativeFont>> filefonts;
     extern std::unordered_map<u32, std::pair<SharedFont, NativeFont>> shfonts;
+    extern std::unordered_map<u32, std::pair<SharedFont, NativeFont>> icofonts;
 
     void Renderer::Initialize(u32 SdlFlags, bool RenderAccel)
     {
@@ -89,6 +90,19 @@ namespace pu::ui::render
         SDL_QueryTexture(Texture, NULL, NULL, &pos.w, &pos.h);
         SDL_RenderCopy(purend, Texture, NULL, &pos);
     }
+    
+    void Renderer::RenderTexture(NativeTexture Texture, s32 X, s32 Y, s32 W, s32 H, int AlphaMod)
+    {
+        SDL_Rect pos;
+        pos.x = X + this->basex;
+        pos.y = Y + this->basey;
+        pos.w = W;
+        pos.h = H;
+        if(AlphaMod >= 0) SetAlphaValue(Texture, (u8)AlphaMod);
+        if(this->basea >= 0) SetAlphaValue(Texture, (u8)this->basea);
+        //SDL_QueryTexture(Texture, NULL, NULL, &pos.w, &pos.h);
+        SDL_RenderCopy(purend, Texture, NULL, &pos);
+    }
 
     void Renderer::RenderTextureScaled(NativeTexture Texture, s32 X, s32 Y, s32 Width, s32 Height, int AlphaMod)
     {
@@ -100,6 +114,18 @@ namespace pu::ui::render
         if(AlphaMod >= 0) SetAlphaValue(Texture, (u8)AlphaMod);
         if(this->basea >= 0) SetAlphaValue(Texture, (u8)this->basea);
         SDL_RenderCopyEx(purend, Texture, NULL, &pos, 0, NULL, SDL_FLIP_NONE);
+    }
+    
+    void Renderer::RenderTextureRotate(NativeTexture Texture, s32 X, s32 Y, s32 Width, s32 Height, s32 Angle, int AlphaMod)
+    {
+        SDL_Rect pos;
+        pos.x = X + this->basex;
+        pos.y = Y + this->basey;
+        pos.w = Width;
+        pos.h = Height;
+        if(AlphaMod >= 0) SetAlphaValue(Texture, (u8)AlphaMod);
+        if(this->basea >= 0) SetAlphaValue(Texture, (u8)this->basea);
+        SDL_RenderCopyEx(purend, Texture, NULL, &pos, Angle, NULL, SDL_FLIP_NONE);
     }
 
     void Renderer::RenderRectangle(Color Color, s32 X, s32 Y, s32 Width, s32 Height)
@@ -127,7 +153,7 @@ namespace pu::ui::render
         SDL_SetRenderDrawColor(purend, Color.R, Color.G, Color.B, alpha);
         SDL_RenderFillRect(purend, &rect);
     }
-	
+
     void Renderer::RenderRoundedRectangle(Color Color, s32 X, s32 Y, s32 Width, s32 Height, s32 Radius)
     {
         u8 alpha = Color.A;
@@ -144,6 +170,14 @@ namespace pu::ui::render
         SDL_SetRenderDrawBlendMode(purend, SDL_BLENDMODE_BLEND);
     }
 
+    void Renderer::RenderLine(Color Color, s32 X1, s32 Y1, s32 X2, s32 Y2)
+    {
+        u8 alpha = Color.A;
+        if(this->basea >= 0) alpha = (u8)this->basea;
+        SDL_SetRenderDrawColor(purend, Color.R, Color.G, Color.B, alpha);
+        SDL_RenderDrawLine(purend, X1, Y1, X2, Y2);
+    }
+    
     void Renderer::RenderCircle(Color Color, s32 X, s32 Y, s32 Radius)
     {
         u8 alpha = Color.A;

@@ -31,11 +31,14 @@ namespace pu::ui::render
             void InitializeRender(Color Color);
             void FinalizeRender();
             void RenderTexture(NativeTexture Texture, s32 X, s32 Y, int AlphaMod = -1);
+            void RenderTexture(NativeTexture Texture, s32 X, s32 Y, s32 W, s32 H, int AlphaMod = -1);
             void RenderTextureScaled(NativeTexture Texture, s32 X, s32 Y, s32 Width, s32 Height, int AlphaMod = -1);
+            void RenderTextureRotate(NativeTexture Texture, s32 X, s32 Y, s32 Width, s32 Height, s32 Angle, int AlphaMod = -1);
             void RenderRectangle(Color Color, s32 X, s32 Y, s32 Width, s32 Height);
             void RenderRectangleFill(Color Color, s32 X, s32 Y, s32 Width, s32 Height);
             void RenderRoundedRectangle(Color Color, s32 X, s32 Y, s32 Width, s32 Height, s32 Radius);
             void RenderRoundedRectangleFill(Color Color, s32 X, s32 Y, s32 Width, s32 Height, s32 Radius);
+            void RenderLine(Color Color, s32 X1, s32 Y1, s32 X2, s32 Y2);
             void RenderCircle(Color Color, s32 X, s32 Y, s32 Radius);
             void RenderCircleFill(Color Color, s32 X, s32 Y, s32 Radius);
             void RenderShadowSimple(s32 X, s32 Y, s32 Width, s32 Height, s32 BaseAlpha, u8 MainAlpha = 255);
