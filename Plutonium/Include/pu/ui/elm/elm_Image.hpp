@@ -36,7 +36,7 @@ namespace pu::ui::elm
             bool IsImageValid();
             void OnRender(render::Renderer::Ref &Drawer, s32 X, s32 Y);
             void OnInput(u64 Down, u64 Up, u64 Held, bool Touch);
-        private:
+        protected:
             String img;
             render::NativeTexture ntex;
             s32 x;
